@@ -4,7 +4,7 @@ sheet_names = [
     'DEPOSITOS', 
     'PRESTAMOS', 
     # 'TASAS DE MERCADO', 
-    # 'INSTRUMENTOS DEL BCRA',
+    #'INSTRUMENTOS DEL BCRA',
     ]
 
 cols_names = {
@@ -62,34 +62,36 @@ cols_names = {
         'tipo_serie',
     ],
     'DEPOSITOS': [
-        'date',
-        'TOTAL cc',
-        'TOTAL ca',
-        'TOTAL pf tradicional',
-        'TOTAL pf uva',
-        'TOTAL otros',
-        'TOTAL total dep',
-        'TOTAL boden'
-        'TOTAL total',
-        'PRIVADOS cc',
-        'PRIVADOS ca',
-        'PRIVADOS pf tradicional',
-        'PRIVADOS pf uva',
-        'PRIVADOS otros',
-        'PRIVADOS total dep',
-        'PRIVADOS boden'
-        'PRIVADOS total',
-        'TOTAL depositos usd en ars',
-        'PRIVADOS depositos usd en ars',
-        'delete_1',
-        'TOTAL total mas usd',
-        'PRIVADOS total mas usd',
-        'delete_2',
-        'TOTAL dep usd',
-        'PRIVADOS dep usd',
-        'delete_3',
-        'm2',
-        'tipo_serie'
+        'date', #1
+        'TOTAL cc', #2
+        'TOTAL ca', #3
+        'TOTAL pf tradicional', #4
+        'TOTAL pf uva', #5
+        'TOTAL otros', #6
+        'TOTAL cedros cer', #7
+        'TOTAL total dep', #8
+        'TOTAL boden', #9
+        'TOTAL total', #10
+        'PRIVADOS cc', #1
+        'PRIVADOS ca', #2
+        'PRIVADOS pf tradicional', #3
+        'PRIVADOS pf uva', #4
+        'PRIVADOS otros', #5
+        'PRIVADOS cedros cer',#6 
+        'PRIVADOS total dep', #7
+        'PRIVADOS boden', #8
+        'PRIVADOS total', #9
+        'TOTAL depositos usd en ars', #10
+        'PRIVADOS depositos usd en ars', #1
+        'delete_1', #2
+        'TOTAL total mas usd', #3
+        'PRIVADOS total mas usd', #4
+        'delete_2', #5
+        'TOTAL dep usd', #6
+        'PRIVADOS dep usd', #7
+        'delete_3', #8
+        'm2', #9
+        'tipo_serie', #10 
     ],
     'PRESTAMOS': [
         'date',
@@ -157,3 +159,19 @@ cols_names = {
         'TASA lebac usd usd 12m'
     ]
 }
+
+list_aggregates = [
+    'Base Monetaria',
+    'Base Monetaria + Pasivos Remunerados',
+    'M2',
+    'M3',
+    'Reservas',
+    'Tipo de Cambio',
+]
+
+list_type_graph = [
+    'Nominal',
+    'Escala Logaritmica',
+    'Variación Mensual',
+    'Variación interanual',
+]
