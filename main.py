@@ -6,10 +6,13 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import plotly.express as px
 from tools.mapping import sheet_names
 from tools.mapping import cols_names
+from tools.mapping import list_aggregates, list_type_graph
 from tools.functions import download_file
-
+from tools.functions import preprocessing_data
+from tools.functions import build_nominal_data
 # Control Variables
 hours_to_download = 3
 url = 'https://www.bcra.gob.ar/Pdfs/PublicacionesEstadisticas/series.xlsm'
@@ -18,56 +21,96 @@ filename = 'series.xlsm'
 # Download file from BCRA website 
 download_file(url, filename, hours_to_download)
 
-# Build DataFrames
-data = dict()
-for sheet_name in sheet_names:
-    print(f'Processing {sheet_name} sheet ...')
-    data[sheet_name] = pd.read_excel(
-        io=filename,
-        sheet_name=sheet_name,
-        header=None,
-        skiprows=9,
-        names=cols_names[sheet_name])
+# Preprocessing data
+data = preprocessing_data(filename)
 
-    # Remove useless columns
-    for col_name in cols_names[sheet_name]:
-        if 'delete' in col_name:
-            data[sheet_name] = data[sheet_name].drop(col_name, axis=1)
-        elif 'date' in col_name or 'tipo_serie' in col_name:
-            pass
-        else:
-            data[sheet_name][col_name] = data[sheet_name][col_name].replace(',', '', regex=True).astype(float)
-    # Filter daily info
-    data[sheet_name] = data[sheet_name][data[sheet_name]['tipo_serie']=='D']
-
-    print(f'OK: {sheet_name} was processed successfully')
-
-# Process DF
-# df = pd.DataFrame()
-# df['fecha'] = data['BASE MONETARIA']['fecha'][data['BASE MONETARIA']['tipo_serie']=='D']
-# df['base monetaria'] = data['BASE MONETARIA']['total'][data['BASE MONETARIA']['tipo_serie']=='D']
-# df['billetes publico'] = data['BASE MONETARIA']['billetes publico'][data['BASE MONETARIA']['tipo_serie']=='D']
-# df['billetes entidades'] = data['BASE MONETARIA']['billetes entidades'][data['BASE MONETARIA']['tipo_serie']=='D']
-# df['circulacion monetaria'] = df['billetes publico'] + df['billetes entidades']
-
-# # Monthly df
-# df_month = df.resample(rule='M', on='fecha').mean()
-# df_month['fecha'] = df_month.index
-# # Ratios
-# df_ratios = pd.DataFrame()
-# df_ratios['fecha'] = df['fecha']
-# df_ratios['circulacion monetaria / BM'] = df['circulacion monetaria']/df['base monetaria']
-
+# Nominal data
+nominal_data = build_nominal_data(data)
 
 # Main 
-st.title('BCRA Balance Sheet Monitor')
+st.title(':flag-ar: BCRA Balance Sheet Monitor :flag-ar:')
 
 st.subheader('Agregados Monetarios')
 
-for sheet_name in sheet_names:
-    st.write(sheet_name)
-    st.dataframe(data=data[sheet_name])
+st.dataframe(nominal_data)
 
-fig = plt.figure(figsize=(12,8))
-plt.plot(data['RESERVAS']['tipo de cambio'])
-st.pyplot(fig)
+aggregate_plot = st.selectbox('Selecciona un agregado monetario', list_aggregates, 0)
+type_plot = st.selectbox('Tipo de gráfico', list_type_graph, 0)
+
+if type_plot == 'Escala Logaritmica':
+    log_type = True
+else:
+    log_type = False
+
+if aggregate_plot == 'Base Monetaria':
+    fig = px.line(
+        nominal_data,
+        x = 'date',
+        y = 'base monetaria',
+        title='Base Monetaria',
+        log_y=log_type,
+    )
+    st.write(fig)
+# elif aggregate_plot == 'Reservas':
+#     fig = px.line(
+#         data['RESERVAS'],
+#         x = 'date',
+#         y = 'total',
+#         title='RESERVAS (Expresas en USD)',
+#         log_y=log_type,
+#     )
+#     st.write(fig)
+# elif aggregate_plot == 'Tipo de Cambio':
+#     fig = px.line(
+#         data['RESERVAS'],
+#         x = 'date',
+#         y = 'tipo de cambio',
+#         title='Tipo de Cambio Oficial (Expresado como: pesos equivalentes a un USD)',
+#         log_y=log_type,
+#     )
+#     st.write(fig)
+elif aggregate_plot == 'M2':
+    fig = px.line(
+        nominal_data,
+        x = 'date',
+        y = 'M2',
+        title='M2 = Billetes en poder del público + Cajas de Ahorro + Cuentas Corrientes',
+        log_y=log_type,
+    )
+    st.write(fig)
+else:
+    st.write(':lightning: Agregado monetario aún no disponible!')
+
+
+
+# # Create a function to generate the plot
+# def generate_plot(x_axis, y_axis, plot_type):
+#     if x_axis == 'Linear':
+#         x = np.linspace(0, 10, 100)
+#     elif x_axis == 'Random':
+#         x = np.random.rand(100)
+
+#     if y_axis == 'Sin':
+#         y = np.sin(x)
+#     elif y_axis == 'Cos':
+#         y = np.cos(x)
+
+#     if plot_type == 'Line':
+#         plt.plot(x, y)
+#     elif plot_type == 'Scatter':
+#         plt.scatter(x, y)
+
+#     plt.title('My Plot')
+#     plt.xlabel(x_axis)
+#     plt.ylabel(y_axis)
+
+# # Create the Streamlit interface
+# st.title('Plot Generator')
+
+# x_axis = st.selectbox('X-Axis Type', ['Linear', 'Random'])
+# y_axis = st.selectbox('Y-Axis Type', ['Sin', 'Cos'])
+# plot_type = st.selectbox('Plot Type', ['Line', 'Scatter'])
+
+# if st.button('Generate Plot'):
+#     st.pyplot(generate_plot(x_axis, y_axis, plot_type))
+
