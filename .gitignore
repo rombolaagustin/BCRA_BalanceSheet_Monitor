@@ -2,3 +2,4 @@ venv
 tools/__pycache__
 series.xlsm
 test.py
+others.py
