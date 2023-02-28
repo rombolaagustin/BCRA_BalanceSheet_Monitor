@@ -34,6 +34,9 @@ st.subheader('Agregados Monetarios')
 
 st.dataframe(nominal_data)
 
+
+''' PLOTS, TODO NEXT WEEK
+
 aggregate_plot = st.selectbox('Selecciona un agregado monetario', list_aggregates, 0)
 type_plot = st.selectbox('Tipo de gráfico', list_type_graph, 0)
 
@@ -114,3 +117,5 @@ else:
 # if st.button('Generate Plot'):
 #     st.pyplot(generate_plot(x_axis, y_axis, plot_type))
 
+
+'''
