@@ -64,11 +64,12 @@ def build_nominal_data(data):
     }
     # Use BM's date like parameter to compare
     nominal_data = data['BASE MONETARIA'][list(bm_rename.keys())]  
-    nominal_data = nominal_data.rename(bm_rename)
-    # nominal_data['base monetaria'] = data['BASE MONETARIA']['total'].values
-    # nominal_data['billetes publico'] = data['BASE MONETARIA']['billetes publico'].values
-    # nominal_data['billetes entidades'] = data['BASE MONETARIA']['billetes entidades'].values
-    # nominal_data['circulacion monetaria'] = nominal_data['billetes publico'] + nominal_data['billetes entidades']
+
+    # New data
+    nominal_data['Circulacion Monetaria'] = nominal_data['billetes publico'] + nominal_data['billetes entidades']
+
+    nominal_data = nominal_data.rename(columns=bm_rename)
+    
     # nominal_data['cajas de ahorro'] = data['DEPOSITOS']['TOTAL ca'].values
     # nominal_data['cuenta corriente'] = data['DEPOSITOS']['TOTAL cc'].values
     # nominal_data['M2'] =  nominal_data['billetes publico'] + nominal_data['cajas de ahorro'] + nominal_data['cajas de ahorro']

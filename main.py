@@ -34,6 +34,7 @@ st.subheader('Agregados Monetarios')
 
 st.dataframe(nominal_data)
 
+st.area_chart(nominal_data['Base Monetaria'])
 
 ''' PLOTS, TODO NEXT WEEK
 
