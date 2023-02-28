@@ -13,6 +13,10 @@ from tools.mapping import list_aggregates, list_type_graph
 from tools.functions import download_file
 from tools.functions import preprocessing_data
 from tools.functions import build_nominal_data
+
+# Objects
+from tools.objects import dataObj
+
 # Control Variables
 hours_to_download = 3
 url = 'https://www.bcra.gob.ar/Pdfs/PublicacionesEstadisticas/series.xlsm'
@@ -27,14 +31,19 @@ data = preprocessing_data(filename)
 # Nominal data
 nominal_data = build_nominal_data(data)
 
+
+# Nominal Object
+data = dataObj(nominal_data)
+data.make_var_yearly()
+
 # Main 
 st.title(':flag-ar: BCRA Balance Sheet Monitor :flag-ar:')
 
 st.subheader('Agregados Monetarios')
 
-st.dataframe(nominal_data)
+st.dataframe(data.nominal)
 
-st.area_chart(nominal_data['Base Monetaria'])
+st.area_chart(data.yearly['Base Monetaria'])
 
 ''' PLOTS, TODO NEXT WEEK
 

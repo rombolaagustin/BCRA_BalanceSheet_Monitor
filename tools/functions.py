@@ -76,3 +76,5 @@ def build_nominal_data(data):
     #nominal_data.reindex()
     print(nominal_data.info())
     return nominal_data
+
+    
